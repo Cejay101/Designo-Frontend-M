@@ -10,7 +10,7 @@ import { Power4, gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 //Firebase
-import { db } from "./firebase/firebaseInit";
+import { db } from "../../firebase/firebaseInit";
 import { collection, addDoc } from "firebase/firestore";
 
 // Define the Contact component
@@ -40,27 +40,19 @@ export default function Contact() {
     e.preventDefault();
 
     try {
-      const docRef = await addDoc(collection(db, "contactUs"), {
+      const docRef = await addDoc(collection(db, "contact&message"), {
         name: name,
         email: email,
-        phoneNumber: phoneNumber,
-        message:message,
+        phoneNumber:phoneNumber,
+        message:message
       });
 
       console.log("Document written with ID: ", docRef.id);
-      console.log(name, email, phoneNumber, message);
-
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setError(true);
-      setIsLoading(false);
-    }, 3000);
-  };
-
+    
+    console.log(name, email, phoneNumber, message);
     setPopup(true);
 
     // Navigate back to the home page after 2 seconds
