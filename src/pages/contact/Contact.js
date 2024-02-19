@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { Power4, gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+//Firebase
+import { db } from "./firebase/firebaseInit";
+import { collection, addDoc } from "firebase/firestore";
+
 // Define the Contact component
 export default function Contact() {
   gsap.registerPlugin(ScrollTrigger);
@@ -32,9 +36,31 @@ export default function Contact() {
   };
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(name, email, phoneNumber, message);
+
+    try {
+      const docRef = await addDoc(collection(db, "contactUs"), {
+        name: name,
+        email: email,
+        phoneNumber: phoneNumber,
+        message:message,
+      });
+
+      console.log("Document written with ID: ", docRef.id);
+      console.log(name, email, phoneNumber, message);
+
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setError(true);
+      setIsLoading(false);
+    }, 3000);
+  };
+
     setPopup(true);
 
     // Navigate back to the home page after 2 seconds
